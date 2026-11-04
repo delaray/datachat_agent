@@ -6,12 +6,25 @@ dist/
 wheels/
 *.egg-info
 chatgpt/
-chatgpt/
+src/__pycache__/
+src/*.py[oc]
+scripts/__pycache__/
+scripts/*.py[oc]
+examples/__pycache__/
+examples/*.py[oc]
+tests/__pycache__/
+tests/*.py[oc]
+
 
 # Virtual environments
 .venv
 
 # API Keys
 *.env
+secrets/
 config/grants.local.json
 .local/
+
+# Misc Files
+diagrams/gemini-api-key-details.png
+docs/poc-assignment.pdf

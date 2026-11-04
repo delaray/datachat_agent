@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.defaultInterpreterPath": "c:\\projects\\opsfleet\\.venv\\Scripts\\python.exe"
+	}
 }

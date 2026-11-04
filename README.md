@@ -1,312 +1,154 @@
-# OpsFleet
+<div align="center">
 
-CLI retail analysis assistant in development. See [ARCHITECTURE.md](ARCHITECTURE.md)
-and [REQUIREMENTS.md](REQUIREMENTS.md) for the proposed system and full scope.
-The original assignment has now been reviewed; see
-[ASSIGNMENT_REVIEW.md](ASSIGNMENT_REVIEW.md) for the mandatory/design-only split and
-remaining submission gaps.
+# 📊 DataChat — OpsFleet Retail Analysis Assistant
 
-The initial LangGraph workflow is implemented in `src/graph.py`. The restricted
-aggregate executor is implemented in `src/trusted_bq.py`; see
-[trusted executor integration](TRUSTED_EXECUTOR.md) for its supported SQL and wiring.
-`main.py` supports single aggregate questions and an interactive conversation with
-strict request and output checks. The three executive scopes are configured locally.
-Typed follow-up context and a bounded aggregate cache live in memory for one identity.
-Owned reports and deletion approvals persist in SQLite; see [REPORTS.md](REPORTS.md).
-Production authentication, durable analytical conversations and broader language
-support remain to be added.
-Request tracing and shared execution budgets are implemented; see
-[OBSERVABILITY.md](OBSERVABILITY.md) for controls, metrics and an offline debugging demo.
+**Ask questions about retail sales in plain English, get answers you can trust, and keep your findings as reports.**
 
-## Local analysis and conversation
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-agent-1C3C3C?logo=langchain&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google_Gemini-LLM-8E75B2?logo=googlegemini&logoColor=white)
+![BigQuery](https://img.shields.io/badge/BigQuery-read--only-669DF6?logo=googlebigquery&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)
+[![Docker](https://img.shields.io/badge/Docker-delaray%2Fdatachat%3A1.0.0-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/delaray/datachat)
 
-`config/grants.local.json` is administrator-managed and ignored by Git. It now
-contains these version-2 catalog grants (also recorded in
-`config/grants.executives.json` for reproducibility):
+[Install](docs/user-guide/01-installation.md) ·
+[Use](docs/user-guide/02-using-datachat.md) ·
+[Roles & Security](docs/user-guide/03-roles-and-security.md) ·
+[Examples](docs/user-guide/04-examples.md) ·
+[Troubleshooting](docs/user-guide/05-troubleshooting.md)
 
-| Executive | CLI identity | Catalog scope |
-| --- | --- | --- |
-| User A | `user-a` | Men department, excluding Accessories |
-| User B | `user-b` | Women department, excluding Accessories |
-| User C | `user-c` | Accessories category, both departments |
+</div>
 
-The source dataset contains Accessories in both departments. Clothing grants
-exclude it to keep the three scopes disjoint. Catalog rules apply in trusted SQL
-on every execution, so new matching products are covered without a stale ID list.
-Department and category include rules are ANDed, followed by category exclusions.
-Exclusions alone cannot grant access. Version-1 explicit product-ID lists remain
-supported; `config/grants.example.json` shows that format with a fictional user.
-Unknown users and missing/malformed configuration are denied before external calls.
-Edits are reloaded on every lookup, including execution-time revalidation.
+---
 
-Run any configured identity:
+## 🧭 What is DataChat?
 
-```bash
-uv run python main.py --user user-a --model gemini-3.6-flash
-uv run python main.py --user user-b --model gemini-3.6-flash
-uv run python main.py --user user-c --model gemini-3.6-flash
-uv run python main.py --user user-a --model gemini-3.6-flash --chat
-uv run python main.py --user user-b --model gemini-3.6-flash --question "Show total item sale value by status"
-```
+DataChat is a **terminal chat assistant for retail executives**. You type a question such as
+*"Show item counts by category"*, and DataChat:
 
-On another checkout, pass `--grants config/grants.executives.json` explicitly or
-copy that reviewed configuration to `config/grants.local.json` first. The CLI never
-silently falls back to example grants if the local configuration is missing.
+1. checks that you are allowed to see the data you asked about,
+2. asks Google **Gemini** to draft a query, then checks that query against strict rules,
+3. runs it against the retail dataset in Google **BigQuery** (read-only),
+4. shows the answer as a table, with notes on how to read it.
 
-Without `--chat` or `--question`, the CLI asks “How many order items can I access?”
-In chat mode, try this sequence:
-
-```text
-Show item counts by category
-completed items only
-by month
-from 2026-01-01 to 2027-01-01
-total item sale value instead
-/reset
-Show average item sale price by status
-/quit
-```
-
-Use `/help` for the full approved phrase list. Counts, total item sale value and
-average item sale price support grouping by category, UTC item month or item status.
-Follow-ups retain the previous successful metric/grouping/filters; a new full
-question starts fresh. Date filters use explicit month boundaries with an exclusive
-end. Unsupported text triggers clarification before model inference, and failed
-turns do not replace the last successful request. `/reset`, a new process or a
-change in product grants clears context. Sessions cannot switch users through chat.
-
-`src/conversation.py` resolves phrases to an immutable request, then supplies
-canonical, PII-free input to the graph. Gemini proposes SQL and returns structured
-aggregate rows. Trusted code requires the generated SQL to match the resolved
-request and every returned value to match BigQuery evidence. Final output is an
-escaped table with deterministic caveats; unsupported claims or rounded values
-are rejected. Every turn is reauthorized, and grant changes during inference block
-publication. No raw transcript is retained. Up to eight successful aggregate results
-are cached in memory for report generation (128,000-byte total budget). Only an
-explicit `/report` or `--report` action saves a report and its aggregate evidence.
-Each analytical request executes one query, with the existing per-query cost/row limits.
-
-Small-cohort suppression applies separately to each group. Omitted/empty groups
-are not zero, and displayed group totals may exclude suppressed groups. Item sale
-value is not approved net revenue; status/returns/currency definitions still need
-review. Free-form analysis, causal explanations, autonomous multi-query planning and durable
-checkpointed conversations remain future work. `build_count_graph` remains as the
-original count-only API; the CLI now uses `AnalysisSession` and `build_analysis_graph`.
-
-`--user` selects a local operator test identity. It is **not authentication** for a
-multi-user application. Anyone who controls this CLI or the grant file is a trusted
-administrator; do not expose identity selection or grant-file paths through a web
-request. A deployed service must get the identity from verified authentication and
-keep grant configuration accessible only to administrators.
-
-```bash
-uv sync
-uv run python -m unittest discover -s tests -v
-```
-
-The tests use synthetic fixtures and make no Google API calls. Real use needs an
-API key and a supported model ID for Gemini, plus Application Default Credentials
-and a billing project for BigQuery. Those are separate authentication mechanisms.
-Keep credentials in local configuration; do not commit them.
-
-Create and manage reports in chat:
-
-```text
-/report
-/reports
-/show REPORT_ID
-/delete conversation
-/cancel OPERATION_ID
-/delete conversation
-DELETE OPERATION_ID
-/audit
-```
-
-The preview shows exact report IDs/titles before a LangGraph approval interrupt.
-Only the matching `DELETE OPERATION_ID` confirms deletion; cancellation leaves
-reports intact. The library is `.local/opsfleet.sqlite3`. Read [REPORTS.md](REPORTS.md)
-for search-based deletion, ownership/scope rules, restart recovery and the offline
-demo `uv run python -m examples.report_demo`.
-
-There are 63 offline tests covering request grammar, multi-turn context, user/grant
-isolation, SQL drift, exact output grounding, CLI commands and the executor. The
-grouped category-count question passed live for User A. A live completed-items
-follow-up reached BigQuery but failed during Gemini synthesis with HTTP 429; a
-subsequent follow-up/average-price retry remained blocked at inference. Those
-paths pass offline tests but are not yet fully verified live. Rate/quota errors
-now produce an explicit safe CLI message and preserve the prior successful request.
-The latest live retry still returned HTTP 429. A minimal diagnostic confirmed a
-daily free-tier request quota with a reported limit of 20 for Gemini 3.6 Flash;
-this was not identified as a per-minute limit. Follow-up and average-price live
-verification remain pending until quota is available.
-
-An optional local Golden Trio demo adds eight further offline tests (71 total).
-Start chat with `--golden-demo` to include clearly labeled synthetic question/SQL/
-report-template references. The corpus contains no synthetic database rows and no
-live analytical observations. References are audience-filtered, versioned and SQL
-validated before entering model context; they never replace live evidence or the
-approved request SQL. This first retrieval implementation uses metric/grouping
-matching rather than embeddings, makes no additional retrieval API calls and
-does not claim the templates are human-reviewed historical analyst reports.
-Report generation/storage/approval coverage brings the complete suite to 101 tests.
-Shared request budgets and privacy-safe trace coverage bring the current total to
-125 tests. CLI traces default to `.local/traces.jsonl`; failed turns print their
-request ID. Inspect aggregate outcomes with:
-
-```bash
-uv run python -m src.trace_summary .local/traces.jsonl
-uv run python -m examples.trace_demo
-```
-
-Request deadlines, physical model attempts, query submissions/dry runs and aggregate
-query byte caps are shared across retries/repairs. Daily quota errors stop retrying;
-transient retries use provider hints within the remaining budget. Token usage is
-recorded when returned by Gemini, with missing metadata explicitly distinguished.
-No prompts, SQL text, data rows, report bodies or API keys are written to traces.
-
-## Current integration
+You can refine the question in follow-up turns ("*completed items only*", "*by month*"), turn your
+analyses into a **saved report** with findings and action items, and later **delete** reports you
+own. Every deletion needs your explicit confirmation.
 
 ```mermaid
-flowchart TD
-    S([START]) --> A[authorize]
-    A --> C[classify]
-    C --> R[retrieve]
-    R --> P[plan]
-    R --> SC[schema_answer]
-    P --> V[validate]
-    P --> CL[clarify]
-    V --> E[execute]
-    V -->|correctable SQL error, within budget| P
-    E -->|correctable SQL error, within budget| P
-    E --> SY[synthesize]
-    SY --> O[check_output]
-    SC --> O
-    O --> F[finish]
-    CL --> F
-    C -->|reports or unsupported| F
-    F --> END([END])
+flowchart LR
+    you(["👤 You<br/>(terminal)"]) -->|question| dc["🤖 DataChat<br/>LangGraph agent"]
+    dc -->|draft SQL| gem["✨ Gemini"]
+    dc -->|validated, scoped query| bq[("📦 BigQuery<br/>retail data · read-only")]
+    dc <-->|your reports| pg[("🗄️ PostgreSQL<br/>report library")]
+    dc -->|checked answer| you
+
+    classDef user fill:#FFF4CE,stroke:#C9A100,color:#3D3000
+    classDef agent fill:#DCEBFF,stroke:#2F6FD6,color:#0B2A5B
+    classDef ext fill:#EDE4FF,stroke:#7A5AC8,color:#2E1A66
+    classDef store fill:#DFF5E3,stroke:#2E9B4A,color:#0E3B1B
+    class you user
+    class dc agent
+    class gem ext
+    class bq,pg store
 ```
 
-Failures also route to `finish`; exhausted query repairs produce a controlled error.
-The intent classifier is a convenience router. Authorization and privacy checks
-are trusted services and must remain effective even if classification is wrong.
-Report commands are routed locally before this analytical graph; destructive report
-operations use the separate approval graph documented in `REPORTS.md`.
+*How to read this diagram:* your question goes only to DataChat. DataChat uses Gemini to draft the
+query, but **trusted code** checks that draft and adds your product restrictions before BigQuery runs
+it. Reports are stored in PostgreSQL, and each executive can see only their own.
 
-| Existing component | Integration |
-| --- | --- |
-| `query_gemini(prompt, model=...)` | Called by classification, planning, schema answering and synthesis. The graph supplies the model explicitly, uses a 30-second per-attempt timeout and two adapter retries. No second generic retry wrapper is added. |
-| `BigQueryRunner.get_table_schema()` | Source for approved schema context. Fetch/cache allowlisted schema, omit descriptions or fields that should not reach the model, and add reviewed metric definitions. |
-| `BigQueryRunner.client` | Used by `TrustedBigQueryExecutor` for scoped dry runs and bounded aggregate queries. The original `execute_query()` remains available for developer use; it must not be exposed to generated SQL. |
-| DataFrame result | Keep local to the executor. Return only bounded, privacy-checked aggregate evidence as JSON; never pass arbitrary rows to Gemini or store a DataFrame in graph state. |
+## ✅ What you can do
 
-The runner's missing `Any` import has been fixed and its missing BigQuery/DataFrame
-dependencies declared. Its interfaces otherwise remain unchanged. Required executor
-columns and types were verified against BigQuery, and a scoped live count succeeded;
-see `TRUSTED_EXECUTOR.md`. Broader schema/join/metric verification remains outstanding.
-The architecture documents refer to `offsfleet`; the actual repository is `opsfleet`
-and its image directory is `images/`.
+| | Task | You type… | Details |
+|:-:|---|---|---|
+| 🔍 | **Analyze data** over several turns | `Show item counts by category` → `completed items only` → `by month` | [Using DataChat § 1](docs/user-guide/02-using-datachat.md#task-1--analyze-data) |
+| 📝 | **Create and read reports** | `/report` · `/reports` · `/show REPORT_ID` | [Using DataChat § 2](docs/user-guide/02-using-datachat.md#task-2--create-and-read-reports) |
+| 🗑️ | **Delete your reports** (with confirmation) | `/delete conversation` → `DELETE OPERATION_ID` | [Using DataChat § 3](docs/user-guide/02-using-datachat.md#task-3--delete-reports) |
 
-## Using the graph
+> [!IMPORTANT]
+> DataChat understands a **fixed set of approved questions and follow-ups**, not free-form
+> English. This is deliberate: every accepted phrase maps to a query that can be checked exactly.
+> Type `/help` at any time to see the full list.
 
-Construct `AnalysisServices` from application-owned callables, then:
+## 👥 Who you can be
 
-```python
-from src.graph import build_graph
+There are three executive identities. Each one sees a **different, non-overlapping** part of the
+product catalog:
 
-# services: an AnalysisServices instance implementing the trusted contracts below.
-graph = build_graph(services, model=configured_model_id, max_repairs=1)
-result = graph.invoke({"question": "How many completed orders?",
-                       "user_id": authenticated_user_id})
-print(result["answer"])
+| Identity | Executive | Products visible | Hidden from this identity |
+|---|---|---|---|
+| 🟦 `user-a` | User A | **Men's** department | Accessories, all Women's products |
+| 🟪 `user-b` | User B | **Women's** department | Accessories, all Men's products |
+| 🟩 `user-c` | User C | **Accessories** (both departments) | All other categories |
 
-# For debugging with synthetic data:
-# print(graph.get_graph().draw_mermaid())
+You choose the identity when you start DataChat (`--user user-b`). You can't switch identity in
+the middle of a chat. See [Roles & Security](docs/user-guide/03-roles-and-security.md) for details.
+
+## 🚀 Quick start (Docker)
+
+You need **Git**, **Docker** (with Compose), the **gcloud CLI**, **uv**, a **Gemini API key** and a
+**Google Cloud project** with BigQuery enabled. The [installation guide](docs/user-guide/01-installation.md)
+explains how to get each one.
+
+```bash
+# 1. Get the project
+git clone https://github.com/delaray/opsfleet.git datachat && cd datachat
+
+# 2. Configure: add your Gemini key, GCP project and a database password
+cp .env.example .env && nano .env
+
+# 3. Let BigQuery use your Google account
+gcloud auth application-default login
+
+# 4. Package your credentials as Docker secrets (stored in ./secrets, never in the image)
+uv run --no-project --with python-dotenv python -m scripts.make_docker_secrets
+
+# 5. Download the public image, start the report database, then chat
+docker compose pull        # pulls delaray/datachat:1.0.0 from Docker Hub
+docker compose up -d postgres
+docker compose run --rm datachat --chat --user user-a
 ```
 
-This is generic wiring guidance. The supported application provides services through
-`build_analysis_graph()`; use the CLI for a live example. For an offline fixture,
-read `tests/test_graph.py`. Nodes return partial
-state updates, ordinary edges advance a stage, and conditional edges choose the
-next stage. State records the safe question, context, plan, SQL, aggregate evidence,
-repair count and answer. Model calls and service objects live outside that state.
+When the `You>` prompt appears, try:
 
-The initial graph compiles without a checkpointer. Invoke it once per request;
-it does not retain history. Do not enable persistence of this state as-is:
-authorization executes after the input enters the graph, so raw request text could
-otherwise be checkpointed before sanitization. Sanitize at the API/CLI boundary
-before adding checkpoint persistence, and expose only the final answer to users.
+```text
+You> Show item counts by category
+You> completed items only
+You> /report
+You> /quit
+```
 
-## Implementation sequence
+> [!TIP]
+> Prefer running without Docker? The [installation guide](docs/user-guide/01-installation.md#option-b--local-python-installation)
+> also covers a local Python install with **uv** and **PostgreSQL**.
 
-1. **Approve schema, metrics and entitlement fixtures.** Inspect the four tables
-   with authenticated read-only access. Record joins, timestamp semantics and order
-   statuses. Decide whether revenue means completed item sale price, how returns
-   are excluded, and the reporting timezone. Create two synthetic identities with
-   disjoint product grants. Do not infer identity or grants from a chat message.
-2. **Implement `AnalysisServices`.** `authorize_request(question, user_id)` looks
-   up authenticated grants and rejects or sanitizes unsafe input before any model
-   call. `retrieve_context(question, user_id)` returns approved schema, metrics,
-   and eventually access-filtered Golden Trios and sanitized conversation history.
-   `validate_sql(sql, user_id)` parses BigQuery SQL, validates a single allowed read
-   query, resolves all tables/columns/subqueries, rejects PII and external access,
-   and returns canonical SQL. A regex or prompt-based filter is insufficient.
-3. **Build the trusted executor.** `execute_sql(sql, user_id)` rechecks current
-   grants and SQL at the data-access boundary. Use controlled views or an audited
-   AST transformation so every relevant source is restricted to allowed products;
-   joins, CTEs and subqueries must not bypass scope. Dry-run the same scoped SQL,
-   apply `maximum_bytes_billed`, disable legacy SQL, cap rows, set job/API timeouts,
-   and cancel jobs that exceed their deadline. Enforce minimum cohort size and
-   allowed output columns before returning aggregate JSON. Extend the runner with
-   explicit job configuration and metadata; its current one-argument method cannot
-   enforce this contract. Test bypass attempts before enabling real execution.
-4. **Complete the minimal live slice.** `validate_output(answer, evidence, user_id)`
-   enforces privacy and grounding before publication. Only a sanitized SQL syntax
-   or schema error should raise `RepairableQueryError`; permission, privacy, budget
-   and authorization failures raise `PolicyDenied`. Outages become controlled
-   failures, not SQL-repair prompts. Run one reviewed count question end to end,
-   then empty-result, denied-product and denied-PII cases. The graph's single repair
-   default means at most two candidate SQL attempts. The trusted executor's scoped
-   count and complete Gemini-to-BigQuery count paths have passed for all three users.
-   Approved grouped analysis now also uses exact SQL/output checks.
-5. **CLI and safe conversation context (initial implementation complete).**
-   `main.py --chat` invokes the graph and prints only the final answer. The local
-   operator selects an identity from trusted grants; production authentication is
-   still needed. `AnalysisSession` retains only one successful typed request for
-   follow-ups, clears it on grant changes/reset, and rebuilds query/evidence/error
-   state on every turn. Next add authenticated session IDs and durable checkpoints,
-   with authorization on each thread and sanitization before persistence.
-6. **Support multi-step analyses.** Replace the single `plan/sql/evidence` slots
-   with a bounded list of query steps and evidence keyed by step ID. Every step
-   repeats validation and trusted execution. The shared request deadline and
-   model/query/byte ledger are now implemented; reuse the same request scope across
-   future plan steps. Deadlines are cooperative and services must bound their own
-   blocking calls. Avoid treating lack of results as permission to widen access.
-7. **Saved reports and deletion (local implementation complete).** Deterministic
-   reports combine recent validated analyses with findings and action items. SQLite
-   enforces owned storage and durable pending operations. The separate LangGraph
-   workflow freezes IDs/versions, interrupts for explicit token-bound confirmation,
-   revalidates ownership/expiry/versions and soft-deletes atomically with audit.
-   Cancellation has no report side effect. Production authentication, retention,
-   export lifecycle and managed durable storage remain deployment work.
-8. **Resilience and observability (local implementation complete).** Shared request
-   IDs correlate node/model/query/report events. JSONL traces include latency,
-   retries, usage metadata, query/job bytes and structured failures without raw
-   content. Cooperative deadlines and shared call/query/byte budgets prevent further
-   external work after exhaustion. An offline failure-injection demo and summary
-   command support debugging. Production monitoring, retention and distributed
-   budgets remain deployment work.
-9. **Implement production extensions separately.** Durable storage, Cloud Run/IAM,
-   Vertex AI authentication, Golden Trio ingestion/retrieval, preferences, persona
-   management and feedback evaluation follow the design documents. The present
-   Gemini adapter calls the Developer API with an API key; moving to Vertex AI
-   requires a different inference/auth adapter, not just a different model name.
+## 📚 Documentation
 
-The supported subset of milestones 2–5 is implemented: trusted execution, approved
-aggregate requests, exact grounding, three local grant scopes and in-memory follow-ups.
-Broader language/schema support, production authentication, durable state, multi-query
-analysis remain separate work. Local multi-section
-reports and owned saved-report approval/deletion are now implemented.
+| Guide | Read it when you want to… |
+|---|---|
+| 🛠️ [**1. Installation**](docs/user-guide/01-installation.md) | Install DataChat with Docker or Python, and check that it works |
+| 💬 [**2. Using DataChat**](docs/user-guide/02-using-datachat.md) | Learn the questions, follow-ups and report commands, with a one-page cheat sheet |
+| 🔐 [**3. Roles & Security**](docs/user-guide/03-roles-and-security.md) | Understand identities, authentication, validation, privacy and audit |
+| 🎬 [**4. Examples**](docs/user-guide/04-examples.md) | Follow complete sessions, from first question to deleted report |
+| 🩺 [**5. Troubleshooting & FAQ**](docs/user-guide/05-troubleshooting.md) | Understand an error message, limits, quotas and tips |
 
-LangGraph references: [Graph API](https://docs.langchain.com/oss/python/langgraph/graph-api)
-and [interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts).
+<details>
+<summary><b>For developers and reviewers</b></summary>
+
+| Document | Topic |
+|---|---|
+| [docs/README.dev.md](docs/README.dev.md) | Developer README: implementation status, graph wiring, tests |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Production high-level design |
+| [TRUSTED_EXECUTOR.md](TRUSTED_EXECUTOR.md) | The restricted BigQuery executor |
+| [REPORTS.md](REPORTS.md) | Report generation, ownership and the deletion workflow |
+| [OBSERVABILITY.md](OBSERVABILITY.md) | Tracing, budgets and debugging |
+| [docs/postgresql.md](docs/postgresql.md) · [docs/docker-image.md](docs/docker-image.md) | Database and container details |
+
+</details>
+
+---
+
+<div align="center">
+<sub>DataChat is a proof of concept. The <code>--user</code> option selects a test identity on your own machine; it is not a login system.
+See <a href="docs/user-guide/03-roles-and-security.md">Roles &amp; Security</a>.</sub>
+</div>
