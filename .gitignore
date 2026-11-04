@@ -6,6 +6,12 @@ dist/
 wheels/
 *.egg-info
 chatgpt/
+src/__pycache__/
+src/*.py[oc]
+scripts/__pycache__/
+scripts/*.py[oc]
+examples/__pycache__/
+examples/*.py[oc]
 
 
 # Virtual environments
