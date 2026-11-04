@@ -12,6 +12,8 @@ scripts/__pycache__/
 scripts/*.py[oc]
 examples/__pycache__/
 examples/*.py[oc]
+tests/__pycache__/
+tests/*.py[oc]
 
 
 # Virtual environments
