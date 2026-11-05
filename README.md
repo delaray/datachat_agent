@@ -132,6 +132,36 @@ You> /quit
 | 🎬 [**4. Examples**](docs/user-guide/04-examples.md) | Follow complete sessions, from first question to deleted report |
 | 🩺 [**5. Troubleshooting & FAQ**](docs/user-guide/05-troubleshooting.md) | Understand an error message, limits, quotas and tips |
 
+## 📦 Assignment deliverables
+
+The [deliverables/](deliverables/) folder holds the completed assignment: the brief, the design documents
+(each as Markdown, Word and PDF) and the architecture diagrams they reference.
+
+| File | Type | Description |
+|---|---|---|
+| [assignment.pdf](deliverables/assignment.pdf) | PDF | The OpsFleet assignment brief: build a data analysis chat assistant for retail executives and design its production HLD |
+| [datachat-assignment.pdf](deliverables/datachat-assignment.pdf) | PDF | Another copy of the assignment brief (same text, separately exported file) |
+| [datachat-agent-hld-requirements-and-integration-design.md](deliverables/datachat-agent-hld-requirements-and-integration-design.md) | Markdown | Production High-Level Design: requirement coverage matrix, component relationships, design decisions and conclusions |
+| [datachat-agent-hld-requirements-and-integration-design.docx](deliverables/datachat-agent-hld-requirements-and-integration-design.docx) | Word | Word version of the High-Level Design |
+| [datachat-agent-hld-requirements-and-integration-design.pdf](deliverables/datachat-agent-hld-requirements-and-integration-design.pdf) | PDF | PDF version of the High-Level Design |
+| [datachat-agent-logical-architecture-explained.md](deliverables/datachat-agent-logical-architecture-explained.md) | Markdown | Companion to the HLD that explains each of the 17 components in the logical architecture diagram: purpose, operation, inputs, outputs and controls |
+| [datachat-agent-logical-architecture-explained.docx](deliverables/datachat-agent-logical-architecture-explained.docx) | Word | Word version of the logical architecture explanation |
+| [datachat-agent-logical-architecture-explained.pdf](deliverables/datachat-agent-logical-architecture-explained.pdf) | PDF | PDF version of the logical architecture explanation |
+| [datachat-design-and-implentation-plan.md](deliverables/datachat-design-and-implentation-plan.md) | Markdown | Architecture, design strategy and implementation roadmap: technology stack, LangGraph agent design, how each requirement is met, build order and demo plan |
+| [datachat-design-and-implentation-plan.docx](deliverables/datachat-design-and-implentation-plan.docx) | Word | Word version of the design and implementation plan |
+| [datachat-design-and-implentation-plan.pdf](deliverables/datachat-design-and-implentation-plan.pdf) | PDF | PDF version of the design and implementation plan |
+| [hligh-level-logical-architecture..png](<deliverables/hligh-level-logical-architecture..png>) | PNG image | High-level logical architecture: UI, API gateway, LangGraph orchestrator, intent router, analysis subgraph, report management and the data stores behind them |
+| [logical-architecture.png](deliverables/logical-architecture.png) | PNG image | Detailed logical architecture with the 17 components described in the architecture explanation document |
+| [logical-architecture. (2).png](<deliverables/logical-architecture. (2).png>) | PNG image | Golden Bucket feedback loop: captured analyses go through quality checks and analyst review, then into the versioned Golden Bucket, followed by re-indexing of embeddings |
+| [Runtime-Dataflow-Diagram.png](deliverables/Runtime-Dataflow-Diagram.png) | PNG image | Runtime dataflow: how a single request moves through the system at query time |
+| [retrieval-architecture.png](deliverables/retrieval-architecture.png) | PNG image | Retrieval architecture: how Golden Knowledge (Trios), schema and metric context are fetched for a question |
+| [deletion-workflow.png](deliverables/deletion-workflow.png) | PNG image | Destructive-operation workflow: deleting a saved report with scoped targeting and explicit human confirmation |
+| [poc-architecture.png](deliverables/poc-architecture.png) | PNG image | Architecture of the proof-of-concept prototype built in this repository |
+| [gcp-deployment.png](deliverables/gcp-deployment.png) | PNG image | Production GCP deployment: Cloud Run, Cloud SQL, Cloud Storage, Vertex AI, BigQuery, plus security and operations |
+| [gcp-deployment.svg](deliverables/gcp-deployment.svg) | SVG image | Vector (scalable) version of the GCP deployment diagram |
+| [gcp-deployment-legend.png](deliverables/gcp-deployment-legend.png) | PNG image | Legend for the GCP deployment diagram, showing what each service color group handles |
+| [datachat-users.png](deliverables/datachat-users.png) | PNG image | Table of the three executive users (A, B, C) and the product categories each one is allowed to see |
+
 <details>
 <summary><b>For developers and reviewers</b></summary>
 
