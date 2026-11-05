@@ -1,13 +1,5 @@
 # OpsFleet — Requirements and Implementation Checklist
 
-Source scope verified against the original English assignment PDF on 2026-10-30.
-Deliverable 3 makes numbered requirements 2, 3, 5 and 7 mandatory in working code;
-1, 4, 6 and 8 must be designed and may optionally be implemented. Natural discussion,
-multi-step analysis and reports with action items are also explicit prototype
-expectations. See [ASSIGNMENT_REVIEW.md](ASSIGNMENT_REVIEW.md) for current gaps and
-the optional, synthetic Golden Trio retrieval demonstration. The checklist below
-tracks full delivery scope, not a claim that every line is implemented.
-
 ## Objective
 
 Build a CLI-based conversational retail data analysis agent using LangGraph, Gemini and BigQuery. The system should answer natural language questions, handle follow-ups, execute multi-step analyses, and generate evidence-based reports with recommendations. Submit a credible production architecture, even where implementation is only a prototype.
@@ -22,9 +14,9 @@ Build a CLI-based conversational retail data analysis agent using LangGraph, Gem
 - [ ] Dynamic BigQuery SQL generation, validation, safe execution, and grounded answers.
 - [ ] Multi-step analytics and report generation with insights and action items.
 - [ ] Safety: analytical/request intent boundary; prohibit PII disclosure; enforce per-user product entitlement at data-access boundary; handle malicious prompts and data.
-- [x] Saved reports: owned PostgreSQL (row-level security) list/retrieve/save, frozen-target LangGraph confirmation/cancellation, expiry, atomic soft deletion and audit. Production authentication/storage/retention remain separate.
+- [ ] Saved reports: ownership, list/retrieve/save, exact-target destructive requests, explicit confirmation/cancellation, audit and safe execution.
 - [ ] Resilience: SQL syntax repair, appropriate handling of empty results, bounded retries/backoff, API outages and timeouts, controlled cost budgets, stable CLI errors.
-- [x] Local observability: correlated request/node/model/query/report traces, latency and reported tokens/bytes, missing-usage coverage, structured failures, shared budgets and privacy-safe JSONL logs. Dollar cost conversion and production monitoring remain design/deployment work.
+- [ ] Observability: request and node traces, errors, model latency/tokens, BigQuery job metadata/cost, privacy-safe logging.
 - [ ] Reproducible setup and example run on another machine.
 
 ## Required production design (not necessarily implemented)
