@@ -139,7 +139,6 @@ The [deliverables/](deliverables/) folder holds the completed assignment: the br
 
 | File | Type | Description |
 |---|---|---|
-| [assignment.pdf](deliverables/assignment.pdf) | PDF | The OpsFleet assignment brief: build a data analysis chat assistant for retail executives and design its production HLD |
 | [datachat-assignment.pdf](deliverables/datachat-assignment.pdf) | PDF | Another copy of the assignment brief (same text, separately exported file) |
 | [datachat-agent-hld-requirements-and-integration-design.md](deliverables/datachat-agent-hld-requirements-and-integration-design.md) | Markdown | Production High-Level Design: requirement coverage matrix, component relationships, design decisions and conclusions |
 | [datachat-agent-hld-requirements-and-integration-design.docx](deliverables/datachat-agent-hld-requirements-and-integration-design.docx) | Word | Word version of the High-Level Design |
@@ -152,7 +151,7 @@ The [deliverables/](deliverables/) folder holds the completed assignment: the br
 | [datachat-design-and-implentation-plan.pdf](deliverables/datachat-design-and-implentation-plan.pdf) | PDF | PDF version of the design and implementation plan |
 | [hligh-level-logical-architecture..png](<deliverables/hligh-level-logical-architecture..png>) | PNG image | High-level logical architecture: UI, API gateway, LangGraph orchestrator, intent router, analysis subgraph, report management and the data stores behind them |
 | [logical-architecture.png](deliverables/logical-architecture.png) | PNG image | Detailed logical architecture with the 17 components described in the architecture explanation document |
-| [logical-architecture. (2).png](<deliverables/logical-architecture. (2).png>) | PNG image | Golden Bucket feedback loop: captured analyses go through quality checks and analyst review, then into the versioned Golden Bucket, followed by re-indexing of embeddings |
+| [golden-bucket-feedback-loop.png](<deliverables/golden-bucket-feedback-loop.png>) | PNG image | Golden Bucket feedback loop: captured analyses go through quality checks and analyst review, then into the versioned Golden Bucket, followed by re-indexing of embeddings |
 | [Runtime-Dataflow-Diagram.png](deliverables/Runtime-Dataflow-Diagram.png) | PNG image | Runtime dataflow: how a single request moves through the system at query time |
 | [retrieval-architecture.png](deliverables/retrieval-architecture.png) | PNG image | Retrieval architecture: how Golden Knowledge (Trios), schema and metric context are fetched for a question |
 | [deletion-workflow.png](deliverables/deletion-workflow.png) | PNG image | Destructive-operation workflow: deleting a saved report with scoped targeting and explicit human confirmation |
