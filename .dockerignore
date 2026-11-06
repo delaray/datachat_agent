@@ -2,7 +2,7 @@
 *
 !pyproject.toml
 !uv.lock
-!main.py
+!datachat_agent.py
 !src/
 !config/grants.executives.json
 !config/grants.example.json

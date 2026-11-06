@@ -56,7 +56,7 @@ def summarize(path: str | Path) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Summarize OpsFleet request traces without reading prompts or reports')
+    parser = argparse.ArgumentParser(description='Summarize DataChat Agent request traces without reading prompts or reports')
     parser.add_argument('path')
     args = parser.parse_args()
     print(json.dumps(summarize(args.path), indent=2, sort_keys=True))

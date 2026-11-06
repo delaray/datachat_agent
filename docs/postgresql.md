@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`datachatdb` is the durable relational store for the OpsFleet data-analysis chat
+`datachatdb` is the durable relational store for the DataChat Agent data-analysis chat
 assistant. It holds everything the assistant must remember beyond a single process:
 
 - **Saved reports** generated from validated BigQuery aggregates, each owned by one
@@ -117,7 +117,7 @@ DATACHAT_DB_ADMIN_USER=admindb     DATACHAT_DB_ADMIN_PASSWORD=postgres
 ```
 
 `src.report_store.datachat_conninfo()` builds the connection string from them.
-`main.py --reports-dsn` overrides it.
+`datachat_agent.py --reports-dsn` overrides it.
 
 ## Operations
 

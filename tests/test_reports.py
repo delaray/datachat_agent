@@ -9,9 +9,9 @@ from unittest.mock import Mock, patch
 
 import psycopg
 
-from main import run_chat
+from datachat_agent import run_chat
 from tests.pg_fixture import TEST_DSN, admin_execute, requires_postgres, reset_test_database
-from main import main as cli_main
+from datachat_agent import main as cli_main
 from src.conversation import AnalysisRequest, AnalysisSession, AnalysisSnapshot
 from src.grants import ProductScope, scope_fingerprint
 from src.graph import PolicyDenied
@@ -373,12 +373,12 @@ class OneShotCLITests(StoreFixture, unittest.TestCase):
         job = Mock(job_id='fixture', total_bytes_processed=10)
         job.result.return_value = rows
         client.query.side_effect = [Mock(total_bytes_processed=10), job]
-        arguments = ['main.py', '--user', 'user-a', '--grants', str(grants_path),
+        arguments = ['datachat_agent.py', '--user', 'user-a', '--grants', str(grants_path),
                      '--reports-dsn', TEST_DSN, '--trace-file', str(self.path.parent / 'trace.jsonl'),
                      '--question', 'Show item counts by category', '--report']
-        with patch('sys.argv', arguments), patch('main.load_dotenv'), \
+        with patch('sys.argv', arguments), patch('datachat_agent.load_dotenv'), \
              patch.dict('os.environ', {'PROJECT_ID': 'fixture', 'GEMINI_API_KEY': 'not-a-key'}), \
-             patch('main.BigQueryRunner', return_value=Mock(client=client)), \
+             patch('datachat_agent.BigQueryRunner', return_value=Mock(client=client)), \
              patch('src.graph.query_gemini', side_effect=[json.dumps({'plan': 'Count', 'sql': request.sql}),
                                                           json.dumps({'rows': rows})]), \
              redirect_stdout(io.StringIO()) as output:

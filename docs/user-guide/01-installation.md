@@ -13,7 +13,7 @@ This guide takes you from an empty machine to a working `You>` prompt. It takes 
 | **Report database** | Started for you in a container | You install and run PostgreSQL 16+ |
 | **Python** | Not needed for the app (only `uv` for one helper script) | Python 3.13, installed by `uv` |
 | **Your data is kept in** | Docker volume `pgdata` | Your PostgreSQL server |
-| **Typical start command** | `docker compose run --rm datachat --chat --user user-a` | `uv run python main.py --chat --user user-a` |
+| **Typical start command** | `docker compose run --rm datachat --chat --user user-a` | `uv run python datachat_agent.py --chat --user user-a` |
 
 Both options use the same Google credentials, so do **[Step 0](#step-0--prerequisites-for-both-options)** first.
 
@@ -158,7 +158,7 @@ docker compose run --rm datachat --chat --user user-a
 You should see:
 
 ```text
-OpsFleet analysis session. Type /help for examples or /quit to exit.
+DataChat Agent CLI analysis session. Type /help for examples or /quit to exit.
 Conversation ID: 5f0c…. Use --conversation-id with this ID to resume pending report approvals after restart.
 You>
 ```
@@ -228,14 +228,14 @@ never falls back to example permissions without telling you. (Alternatively, pas
 ### B.5 Check that everything works
 
 ```bash
-uv run python main.py --user user-a
+uv run python datachat_agent.py --user user-a
 ```
 
 With no question, DataChat asks *"How many order items can I access?"*. You should get a one-row
 table of order items, followed by explanatory notes. Then start a chat:
 
 ```bash
-uv run python main.py --user user-a --chat
+uv run python datachat_agent.py --user user-a --chat
 ```
 
 🎉 **You're ready.** Continue with [Using DataChat](02-using-datachat.md).

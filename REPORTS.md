@@ -7,7 +7,7 @@ is needed to generate a report from existing validated analyses or to manage the
 ## Usage
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash --chat
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash --chat
 ```
 
 ```text
@@ -34,7 +34,7 @@ SQL wildcard characters in the search text are not expanded.
 `/report` generates **and saves** the report. A one-shot alternative is:
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash \
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash \
   --question "Show item counts by category" --report
 ```
 
@@ -42,7 +42,7 @@ The chat startup prints a conversation UUID. Pending approvals and saved reports
 survive restart. To recover a pending operation in its original conversation:
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash \
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash \
   --chat --conversation-id ORIGINAL_CONVERSATION_UUID
 ```
 

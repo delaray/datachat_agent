@@ -1,4 +1,4 @@
-# **OpsFleet Assignment — Architecture, Design Strategy & Implementation Roadmap**
+# **DataChat Agent — Architecture, Design Strategy & Implementation Roadmap**
 
 This is an interesting assignment, and it fits particularly well with your experience in data science, RAG, SQL, knowledge graphs, and agentic AI.
 

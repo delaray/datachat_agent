@@ -10,7 +10,7 @@
 
 > [!NOTE]
 > Examples use the **Docker** command prefix. With a local install, replace
-> `docker compose run --rm datachat` with `uv run python main.py`. All other options are the same.
+> `docker compose run --rm datachat` with `uv run python datachat_agent.py`. All other options are the same.
 
 ---
 

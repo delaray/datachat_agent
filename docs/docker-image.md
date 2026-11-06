@@ -1,6 +1,6 @@
 # Docker image and Compose deployment
 
-The interactive OpsFleet chat runs in one application container,
+The interactive DataChat Agent chat runs in one application container,
 **`delaray/datachat:1.0.0`**, which talks live to Gemini and BigQuery. Docker Compose
 adds the official `postgres:18` container that holds the `datachatdb` report library
 (see [postgresql.md](postgresql.md)).
@@ -22,8 +22,8 @@ flowchart LR
 | File | Purpose |
 |------|---------|
 | `Dockerfile` | Multi-stage build of the app image. |
-| `.dockerignore` | **Allow-list** build context: only `main.py`, `src/`, `config/grants.executives.json`, `config/grants.example.json`, `knowledge/`, `db/`, `docker/entrypoint.py`, `pyproject.toml`, `uv.lock`. `.env`, `secrets/`, `.local/`, docs, tests and diagrams can never enter the image. |
-| `docker/entrypoint.py` | Loads `*_FILE` secrets into environment variables, then runs `main.py` with the container arguments. |
+| `.dockerignore` | **Allow-list** build context: only `datachat_agent.py`, `src/`, `config/grants.executives.json`, `config/grants.example.json`, `knowledge/`, `db/`, `docker/entrypoint.py`, `pyproject.toml`, `uv.lock`. `.env`, `secrets/`, `.local/`, docs, tests and diagrams can never enter the image. |
+| `docker/entrypoint.py` | Loads `*_FILE` secrets into environment variables, then runs `datachat_agent.py` with the container arguments. |
 | `compose.yaml` | `postgres` and `datachat` services, secrets and volumes. |
 | `docker/initdb/01-datachat.sql` | First-start database initialization: roles, database privileges, then `db/schema.sql`. |
 | `scripts/make_docker_secrets.py` | Creates `./secrets/` from `.env` and your gcloud Application Default Credentials. |
@@ -38,7 +38,7 @@ flowchart LR
   only, so the build tooling isn't in the final image.
   - Runs as the unprivileged user `datachat` (uid 10001).
   - `DATACHAT_GRANTS_FILE=/app/config/grants.executives.json` makes the executives'
-    grants the default `--grants` (`main.py` reads this variable).
+    grants the default `--grants` (`datachat_agent.py` reads this variable).
   - `/app/.local` (traces) is a declared volume owned by `datachat`.
   - `ENTRYPOINT` is the secret-loading entrypoint. `CMD ["--help"]` shows the CLI options
     when the image is run with no arguments.
@@ -63,7 +63,7 @@ context) that Compose mounts read-only at `/run/secrets/<name>` when a container
 `secrets/app.env` holds the **non-secret** settings (`PROJECT_ID`, `PROJECT_NAME`,
 `DATASET_ID`, `GEMINI_MODEL_1`, `GEMINI_MODEL_2`) and is loaded with `env_file`.
 
-The entrypoint must set `GEMINI_API_KEY` before `main.py` is imported, because
+The entrypoint must set `GEMINI_API_KEY` before `datachat_agent.py` is imported, because
 `src/gemini.py` reads it at import time. It removes the `*_FILE` variables once used.
 
 `gcp_adc.json` is a copy of your `gcloud auth application-default login` user

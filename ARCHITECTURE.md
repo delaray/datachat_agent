@@ -1,4 +1,4 @@
-# OpsFleet Retail Analysis Assistant — Architecture
+# DataChat Agent Retail Analysis Assistant — Architecture
 
 Status: proposed design, not yet implemented. This document is intended to accompany the existing `offsfleet` uv project at `/home/pierre/projects/offsfleet`.
 

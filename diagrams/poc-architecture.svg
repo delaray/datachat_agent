@@ -9,12 +9,12 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 1592.2)">
 <title>opsfleet_poc</title>
 <polygon fill="white" stroke="transparent" points="-21.6,21.6 -21.6,-1592.2 1685.1,-1592.2 1685.1,21.6 -21.6,21.6"/>
-<text text-anchor="start" x="370.75" y="-1553.2" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="18.00">OpsFleet POC — Architecture &amp; Data Flow</text>
+<text text-anchor="start" x="370.75" y="-1553.2" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="18.00">DataChat Agent POC — Architecture &amp; Data Flow</text>
 <text text-anchor="start" x="790.75" y="-1553.2" font-family="Helvetica,sans-Serif" font-size="18.00"> &#160;(one CLI turn; Gemini proposes, trusted code decides)</text>
 <g id="clust1" class="cluster">
 <title>cluster_cli</title>
 <path fill="white" stroke="#999999" stroke-dasharray="5,2" d="M378.5,-1115.68C378.5,-1115.68 1021.5,-1115.68 1021.5,-1115.68 1027.5,-1115.68 1033.5,-1121.68 1033.5,-1127.68 1033.5,-1127.68 1033.5,-1454.18 1033.5,-1454.18 1033.5,-1460.18 1027.5,-1466.18 1021.5,-1466.18 1021.5,-1466.18 378.5,-1466.18 378.5,-1466.18 372.5,-1466.18 366.5,-1460.18 366.5,-1454.18 366.5,-1454.18 366.5,-1127.68 366.5,-1127.68 366.5,-1121.68 372.5,-1115.68 378.5,-1115.68"/>
-<text text-anchor="start" x="623.5" y="-1453.58" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">main.py — CLI process</text>
+<text text-anchor="start" x="623.5" y="-1453.58" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">datachat_agent.py — CLI process</text>
 </g>
 <g id="clust2" class="cluster">
 <title>cluster_graph</title>
@@ -45,7 +45,7 @@
 <title>cli</title>
 <path fill="#ececec" stroke="#666666" stroke-width="1.2" d="M972,-1437.18C972,-1437.18 879,-1437.18 879,-1437.18 873,-1437.18 867,-1431.18 867,-1425.18 867,-1425.18 867,-1413.18 867,-1413.18 867,-1407.18 873,-1401.18 879,-1401.18 879,-1401.18 972,-1401.18 972,-1401.18 978,-1401.18 984,-1407.18 984,-1413.18 984,-1413.18 984,-1425.18 984,-1425.18 984,-1431.18 978,-1437.18 972,-1437.18"/>
 <text text-anchor="middle" x="925.5" y="-1422.18" font-family="Helvetica,sans-Serif" font-size="10.00">Chat loop / one&#45;shot</text>
-<text text-anchor="middle" x="925.5" y="-1411.18" font-family="Helvetica,sans-Serif" font-size="10.00">main.py run_chat()</text>
+<text text-anchor="middle" x="925.5" y="-1411.18" font-family="Helvetica,sans-Serif" font-size="10.00">datachat_agent.py run_chat()</text>
 </g>
 <!-- user&#45;&gt;cli -->
 <g id="edge1" class="edge">

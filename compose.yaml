@@ -1,4 +1,4 @@
-# OpsFleet datachat: interactive chat container + PostgreSQL report library.
+# DataChat Agent: interactive chat container + PostgreSQL report library.
 #   python -m scripts.make_docker_secrets          # once: writes ./secrets/* from .env
 #   docker compose up -d postgres
 #   docker compose run --rm datachat --chat --user user-a

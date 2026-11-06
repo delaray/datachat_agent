@@ -116,10 +116,10 @@ def run_chat(session: AnalysisSession, *,
 
 
 def setup_args_parser() -> argparse.ArgumentParser:
-    "Setup and return the argument parser for the OpsFleet CLI."
+    "Setup and return the argument parser for the DataChat Agent CLI."
     
     parser = argparse.ArgumentParser(
-        description="OpsFleet: authorized retail aggregate analysis"
+        description="DataChat Agent: authorized retail aggregate analysis"
         )
     
     parser.add_argument(

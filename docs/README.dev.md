@@ -9,7 +9,7 @@ remaining submission gaps.
 The initial LangGraph workflow is implemented in `src/graph.py`. The restricted
 aggregate executor is implemented in `src/trusted_bq.py`; see
 [trusted executor integration](../TRUSTED_EXECUTOR.md) for its supported SQL and wiring.
-`main.py` supports single aggregate questions and an interactive conversation with
+`datachat_agent.py` supports single aggregate questions and an interactive conversation with
 strict request and output checks. The three executive scopes are configured locally.
 Typed follow-up context and a bounded aggregate cache live in memory for one identity.
 Owned reports and deletion approvals persist in PostgreSQL (`datachatdb`) with
@@ -44,11 +44,11 @@ Edits are reloaded on every lookup, including execution-time revalidation.
 Run any configured identity:
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash
-uv run python main.py --user user-b --model gemini-3.6-flash
-uv run python main.py --user user-c --model gemini-3.6-flash
-uv run python main.py --user user-a --model gemini-3.6-flash --chat
-uv run python main.py --user user-b --model gemini-3.6-flash --question "Show total item sale value by status"
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash
+uv run python datachat_agent.py --user user-b --model gemini-3.6-flash
+uv run python datachat_agent.py --user user-c --model gemini-3.6-flash
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash --chat
+uv run python datachat_agent.py --user user-b --model gemini-3.6-flash --question "Show total item sale value by status"
 ```
 
 On another checkout, pass `--grants config/grants.executives.json` explicitly or
@@ -285,7 +285,7 @@ before adding checkpoint persistence, and expose only the final answer to users.
    Approved grouped analysis now also uses exact SQL/output checks.
 
 5. **CLI and safe conversation context (initial implementation complete).**
-   `main.py --chat` invokes the graph and prints only the final answer. The local
+   `datachat_agent.py --chat` invokes the graph and prints only the final answer. The local
    operator selects an identity from trusted grants; production authentication is
    still needed. `AnalysisSession` retains only one successful typed request for
    follow-ups, clears it on grant changes/reset, and rebuilds query/evidence/error

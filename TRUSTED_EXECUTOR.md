@@ -137,7 +137,7 @@ The complete Gemini 3.6 Flash → LangGraph → BigQuery → grounded output flo
 passed on 2026-10-30 using an isolated temporary `JsonGrantStore` fixture with
 product IDs 1–10. It returned the same 54-item count. BigQuery reported 3,124,896
 bytes processed; temporary Gemini 503 errors recovered via adapter retries. The
-temporary grant file was removed automatically. `main.py` now exposes this count
+temporary grant file was removed automatically. `datachat_agent.py` now exposes this count
 flow for administrator-approved local grants.
 
 The three requested executives are now configured using version-2 catalog rules:

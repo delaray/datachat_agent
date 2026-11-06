@@ -61,11 +61,11 @@ Implemented files:
   SQL/metadata validation, version selection and provenance checks.
 - `src/conversation.py`: references enter the existing retrieve/planning context;
   generated SQL and final numerical output remain constrained by trusted code.
-- `main.py --golden-demo`: explicit opt-in for synthetic drafts. Normal operation
+- `datachat_agent.py --golden-demo`: explicit opt-in for synthetic drafts. Normal operation
   does not silently include synthetic examples.
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash --chat --golden-demo
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash --chat --golden-demo
 ```
 
 The demonstration uses deterministic metric/grouping relevance, not embeddings or

@@ -1,9 +1,9 @@
-# OpsFleet Retail Data Analysis Assistant
+# DataChat Agent — Retail Data Analysis Assistant
 
 ## Requirements, Component Relationships, Decisions and Conclusions
 
 **Document status:** Proposed production High-Level Design (HLD), with Proof of Concept (POC) delivery obligations identified.  
-**Source material:** OpsFleet assignment, requirements matrix screenshot, production logical and GCP deployment diagrams, runtime dataflow diagram.  
+**Source material:** DataChat Agent assignment specification, requirements matrix screenshot, production logical and GCP deployment diagrams, runtime dataflow diagram.  
 **Framework:** LangGraph (Python); **analytics:** BigQuery; **LLM:** Gemini; **target cloud:** Google Cloud Platform.  
 **Implementation status caveat:** The POC obligations below are established by the assignment. This document does **not** certify that the current repository implements them. A separate code review, tests and demo run are needed to establish actual completion.
 
@@ -354,7 +354,7 @@ For the production-only requirements, include design-review evidence: retrieval 
 
 ### 6.1 System summary
 
-OpsFleet's proposed assistant is a guarded, conversational analytical system: executives ask retail questions naturally; LangGraph plans and routes work; Gemini helps generate SQL and explain results; controlled BigQuery access supplies evidence; reports are saved under user ownership; destructive report actions require durable confirmation; and observable, bounded recovery protects the user experience. In production, Golden Knowledge, preferences, evaluations and persona versioning improve relevance and adaptability without weakening security.
+The proposed DataChat Agent is a guarded, conversational analytical system: executives ask retail questions naturally; LangGraph plans and routes work; Gemini helps generate SQL and explain results; controlled BigQuery access supplies evidence; reports are saved under user ownership; destructive report actions require durable confirmation; and observable, bounded recovery protects the user experience. In production, Golden Knowledge, preferences, evaluations and persona versioning improve relevance and adaptability without weakening security.
 
 ### 6.2 Known limitations
 

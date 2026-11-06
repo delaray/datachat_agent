@@ -27,7 +27,7 @@ docker compose run --rm datachat --chat --user user-a
 ```
 
 ```text
-OpsFleet analysis session. Type /help for examples or /quit to exit.
+DataChat Agent CLI analysis session. Type /help for examples or /quit to exit.
 Conversation ID: 3b9e…. Use --conversation-id with this ID to resume pending report approvals after restart.
 
 You> Show item counts by category

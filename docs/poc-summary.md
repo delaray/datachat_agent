@@ -1,4 +1,4 @@
-# OpsFleet POC — Summary
+# DataChat Agent POC — Summary
 
 A CLI chat assistant that lets retail executives analyse the BigQuery `thelook_ecommerce`
 dataset. It is built on **LangGraph** and **Gemini** (`gemini-3.6-flash`), and its core principle
@@ -7,7 +7,7 @@ by deterministic Python, not by the model. Diagram: [`diagrams/poc-architecture.
 
 ## How one turn works
 
-1. **CLI** (`main.py`). The operator picks a local identity (`--user user-a|b|c`). Each chat line
+1. **CLI** (`datachat_agent.py`). The operator picks a local identity (`--user user-a|b|c`). Each chat line
    first goes to the **report command router** (`src/report_commands.py`). Anything that is not a
    report command goes to **`AnalysisSession`** (`src/conversation.py`).
 2. **Request grammar.** `parse_request()` accepts only allow-listed phrases, such as *"Show total

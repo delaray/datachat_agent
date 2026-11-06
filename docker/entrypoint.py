@@ -1,7 +1,7 @@
-"""Container entrypoint: load file-based secrets, then run the OpsFleet CLI.
+"""Container entrypoint: load file-based secrets, then run the DataChat Agent CLI.
 
 For each VAR in SECRET_VARS, if VAR_FILE names a file (a Compose secret under
-/run/secrets), its contents become VAR. This must happen before main.py is imported
+/run/secrets), its contents become VAR. This must happen before datachat_agent.py is imported
 because src/gemini.py reads GEMINI_API_KEY at import time.
 """
 
@@ -18,5 +18,5 @@ for var in SECRET_VARS:
         os.environ[var] = Path(path).read_text(encoding='utf-8').strip()
 
 sys.path.insert(0, '/app')
-sys.argv = ['main.py', *sys.argv[1:]]
-runpy.run_path('/app/main.py', run_name='__main__')
+sys.argv = ['datachat_agent.py', *sys.argv[1:]]
+runpy.run_path('/app/datachat_agent.py', run_name='__main__')

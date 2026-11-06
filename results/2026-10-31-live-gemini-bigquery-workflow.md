@@ -26,7 +26,7 @@ It also covers natural-language analysis turns and report generation.
 - Gemini usage was kept small: 11 model attempts in total.
 
 **How it was run:** two scripts, both reproduced at the end of this file, run from the project root
-with `uv run python <script>`. Chat turns go through the real `main.run_chat()` loop, with scripted
+with `uv run python <script>`. Chat turns go through the real `datachat_agent.run_chat()` loop, with scripted
 input in place of the keyboard. Everything else uses the production classes: `AnalysisSession`,
 `TrustedBigQueryExecutor`, `ReportCommands`, `ReportStore` and `JsonlTraceSink`.
 
@@ -183,7 +183,7 @@ The failures break down as follows:
 Re-run when Gemini latency is normal. This costs about 4 model calls:
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash --chat
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash --chat
 # Show item counts by category → completed items only → from 2025-01-01 to 2026-01-01
 ```
 
@@ -209,7 +209,7 @@ sys.path.insert(0, os.getcwd())
 from dotenv import load_dotenv
 load_dotenv('.env', override=True)
 
-from main import run_chat
+from datachat_agent import run_chat
 from src.bq_client import BigQueryRunner
 from src.conversation import AnalysisSession
 from src.graph import PolicyDenied

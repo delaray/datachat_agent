@@ -1,4 +1,4 @@
-# OpsFleet data-analysis chat assistant (delaray/datachat).
+# DataChat Agent data-analysis chat assistant (delaray/datachat).
 # Secrets are never baked into this image; see docs/docker-image.md.
 
 FROM ghcr.io/astral-sh/uv:0.8.22 AS uv
@@ -12,14 +12,14 @@ RUN uv sync --frozen --no-dev --no-install-project
 
 FROM python:3.13-slim
 LABEL org.opencontainers.image.title="datachat" \
-      org.opencontainers.image.description="OpsFleet data-analysis chat assistant (Gemini + BigQuery + PostgreSQL)" \
+      org.opencontainers.image.description="DataChat Agent data-analysis chat assistant (Gemini + BigQuery + PostgreSQL)" \
       org.opencontainers.image.version="1.0.0"
 ENV PATH=/opt/venv/bin:$PATH PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
     DATACHAT_GRANTS_FILE=/app/config/grants.executives.json
 RUN useradd --create-home --uid 10001 datachat
 WORKDIR /app
 COPY --from=build /opt/venv /opt/venv
-COPY main.py ./
+COPY datachat_agent.py ./
 COPY src ./src
 COPY config/grants.executives.json config/grants.example.json ./config/
 COPY knowledge ./knowledge

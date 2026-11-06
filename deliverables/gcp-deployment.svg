@@ -22,7 +22,7 @@
   </style>
 </defs>
 <rect x="0" y="0" width="1200" height="1697" fill="white"/>
-<text x="60" y="66" class="heading">OpsFleet · Google Cloud deployment</text>
+<text x="60" y="66" class="heading">DataChat Agent · Google Cloud deployment</text>
 <text x="60" y="96" class="sub">Production architecture · portrait layout · logical service interactions</text>
 
 <!-- Entry -->

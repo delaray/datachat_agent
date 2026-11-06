@@ -9,7 +9,7 @@ API call is required.
 ## Run and inspect
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash --chat
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash --chat
 uv run python -m src.trace_summary .local/traces.jsonl
 ```
 
@@ -44,7 +44,7 @@ as after a process crash, are not counted as completed requests.
 | Output tokens per model call | 4,096 | Sent as `generationConfig.maxOutputTokens` |
 
 ```bash
-uv run python main.py --user user-a --model gemini-3.6-flash --chat \
+uv run python datachat_agent.py --user user-a --model gemini-3.6-flash --chat \
   --deadline-seconds 90 --max-model-attempts 4 --max-queries 1 \
   --max-dry-runs 1 --max-query-bytes 100000000 --max-output-tokens 4096
 ```

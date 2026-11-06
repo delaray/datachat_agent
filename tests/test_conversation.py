@@ -2,7 +2,7 @@ import json
 import unittest
 from unittest.mock import Mock
 
-from main import run_chat
+from datachat_agent import run_chat
 from src.conversation import AnalysisRequest, AnalysisSession, UnsupportedRequest, parse_request
 from src.grants import ProductScope
 from src.gemini import GeminiAPIError

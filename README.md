@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📊 DataChat — OpsFleet Retail Analysis Assistant
+# 📊 DataChat Agent — Retail Analysis Assistant
 
 **Ask questions about retail sales in plain English, get answers you can trust, and keep your findings as reports.**
 

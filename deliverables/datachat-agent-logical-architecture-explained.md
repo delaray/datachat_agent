@@ -1,4 +1,4 @@
-# OpsFleet — Logical Architecture: Component-by-Component Explanation
+# DataChat Agent — Logical Architecture: Component-by-Component Explanation
 
 **Document type:** High-Level Design (HLD) companion specification  
 **Source:** Supplied “Logical Architecture” PNG  
