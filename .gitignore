@@ -26,6 +26,7 @@ config/grants.local.json
 .local/
 
 # Misc Files
+.vscode
 devprompts/
 diagrams/gemini-api-key-details.png
 docs/poc-assignment.pdf
