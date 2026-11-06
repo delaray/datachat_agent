@@ -6,8 +6,8 @@ This task involves creating a new README.md file in the project root directory t
 
 This new README.md file will contain instructions for the end user to achieve the following:
 1. A brief expanation of what this systemis and what it allows the end user to accomplish
-2. Setup and installation instructions for the user to install the softwre locally on his machine.
-3. Detailed instructions specifying precise how to execute the three types of tasks defined above.
+2. Setup and installation instructions for the user to install the softwre locally on their machine.
+3. Detailed instructions specifying precisely how to execute the three types of tasks defined above.
 4. A summary of the three existing user roles they can assume.
 5. An explanation of how authentication, security, validation and governance is handled in the project
 6. An examples section illustrating with examples and/or scenarios the three types of tasks the user can perform.
