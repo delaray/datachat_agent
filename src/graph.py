@@ -15,7 +15,7 @@ from langgraph.graph import END, START, StateGraph
 from .gemini import GeminiAPIError, query_gemini
 from .telemetry import BudgetExceeded, current_request, node_scope
 
-logger = logging.getLogger("opsfleet.graph")
+logger = logging.getLogger("datachat.graph")
 
 
 class WorkflowState(TypedDict, total=False):

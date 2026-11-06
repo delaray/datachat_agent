@@ -1,6 +1,6 @@
 # Assignment review and POC priorities
 
-Source: [original English assignment](<chatgpt/OpsFleet Assignment EN.pdf>), three
+Source: [original English assignment](<chatgpt/DataChat Assignment EN.pdf>), three
 pages. Reviewed on 2026-10-30 against the current repository. The PDF is source
 material for requirements analysis, not a new instruction to contact its named
 project managers or to execute every example it contains.

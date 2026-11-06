@@ -92,7 +92,7 @@ query costs to the Google Cloud project you name in `PROJECT_ID`.
 ### A.1 Get the project
 
 ```bash
-git clone https://github.com/delaray/opsfleet.git datachat
+git clone https://github.com/delaray/datachat_agent.git datachat
 cd datachat
 ```
 
@@ -184,7 +184,7 @@ You>
 ### B.1 Get the project and its dependencies
 
 ```bash
-git clone https://github.com/delaray/opsfleet.git datachat
+git clone https://github.com/delaray/datachat_agent.git datachat
 cd datachat
 uv sync          # installs Python 3.13 (if needed) and the exact locked dependencies into .venv
 ```

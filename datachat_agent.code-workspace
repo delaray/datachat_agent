@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.defaultInterpreterPath": "c:\\projects\\datachat_agent\\.venv\\Scripts\\python.exe"
+	}
+}

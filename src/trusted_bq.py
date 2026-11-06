@@ -26,7 +26,7 @@ from .graph import PolicyDenied, RepairableQueryError
 from .grants import ProductScope
 from .telemetry import BudgetExceeded, current_request
 
-logger = logging.getLogger("opsfleet.trusted_bq")
+logger = logging.getLogger("datachat.trusted_bq")
 DIMENSIONS = frozenset({"product_category", "item_status", "item_month"})
 METRICS = {"COUNT(*)": "COUNT(*)", "SUM(sale_price)": "SUM(sale_price)",
            "AVG(sale_price)": "AVG(sale_price)"}
@@ -279,7 +279,7 @@ class TrustedBigQueryExecutor:
                 maximum_bytes_billed=billing_cap,
                 job_timeout_ms=max(1, int(remaining() * 1000)),
                 query_parameters=parameters,
-                labels={"application": "opsfleet", "boundary": "trusted-aggregate",
+                labels={"application": "datachat", "boundary": "trusted-aggregate",
                         **({'request_id': runtime.request_id.replace('-', '')} if runtime is not None else {})},
             )
 

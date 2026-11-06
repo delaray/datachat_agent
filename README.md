@@ -92,7 +92,7 @@ explains how to get each one.
 
 ```bash
 # 1. Get the project
-git clone https://github.com/delaray/opsfleet.git datachat && cd datachat
+git clone https://github.com/delaray/datachat_agent.git datachat && cd datachat
 
 # 2. Configure: add your Gemini key, GCP project and a database password
 cp .env.example .env && nano .env

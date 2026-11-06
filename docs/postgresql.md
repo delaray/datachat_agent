@@ -17,7 +17,7 @@ text, aggregate provenance, and workflow state.
 
 The application code is `src/report_store.py`; the schema is `db/schema.sql`;
 provisioning is `scripts/setup_datachatdb.py`. All of it replaced the earlier
-`.local/opsfleet.sqlite3` file.
+`.local/datachat.sqlite3` file.
 
 ## Databases
 

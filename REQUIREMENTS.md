@@ -32,7 +32,7 @@ Build a CLI-based conversational retail data analysis agent using LangGraph, Gem
 
 ## Current state reported by owner
 
-- [x] `uv` project in `/home/pierre/projects/offsfleet`.
+- [x] `uv` project in `/home/pierre/projects/datachat_agent`.
 - [x] `.env` created.
 - [x] BigQuery Runner class added from assignment materials.
 - [x] Basic Gemini chat call tested.

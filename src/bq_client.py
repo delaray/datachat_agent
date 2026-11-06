@@ -4,7 +4,7 @@ from typing import Any
 import pandas as pd
 from google.cloud import bigquery
 
-logger = logging.getLogger("opsfleet-assignment")
+logger = logging.getLogger("datachat.bq_client")
 
 
 class BigQueryRunner:

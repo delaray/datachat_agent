@@ -215,8 +215,7 @@ The runner's missing `Any` import has been fixed and its missing BigQuery/DataFr
 dependencies declared. Its interfaces otherwise remain unchanged. Required executor
 columns and types were verified against BigQuery, and a scoped live count succeeded;
 see `TRUSTED_EXECUTOR.md`. Broader schema/join/metric verification remains outstanding.
-The architecture documents refer to `offsfleet`; the actual repository is `opsfleet`
-and its image directory is `images/`.
+The architecture documents refer to an `images/` directory.
 
 ## Using the graph
 

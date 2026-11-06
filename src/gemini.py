@@ -18,7 +18,7 @@ if __package__:
 else:
     from telemetry import BudgetExceeded, request_scope
 
-logger = logging.getLogger("opsfleet-logger")
+logger = logging.getLogger("datachat.gemini")
 
 # -----------------------------------------------------------------------------
 # Load environment variables from .env file

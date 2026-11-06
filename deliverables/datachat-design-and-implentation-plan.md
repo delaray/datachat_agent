@@ -12,7 +12,7 @@ This distinction is central to demonstrating that your solution could evolve int
 
 I'll break this down into:
 
-1. **What OpsFleet is actually asking you to build.**  
+1. **What the client is actually asking you to build.**  
 2. **Recommended technology stack**  
 3. **The proposed production architecture.**  
 4. **How the LangGraph agent should work.**  
@@ -23,7 +23,7 @@ I'll break this down into:
 
 ## **1\. Understanding the assignment**
 
-OpsFleet is asking for two related but distinct deliverables.
+The client is asking for two related but distinct deliverables.
 
 **Deliverable A** — Production architecture
 
@@ -284,7 +284,7 @@ For example, a customer might be considered churned if they previously purchased
 
 The choice of inactivity period substantially changes the result.
 
-Ideally, ask OpsFleet what churn means to their business. In the meantime, document your chosen assumption.
+Ideally, ask the client what churn means to their business. In the meantime, document your chosen assumption.
 
 A semantic layer will also make the SQL generation much more reliable.
 
@@ -678,7 +678,7 @@ For the actual assignment:
 * Include a small sample of synthetic Golden Trios if you have time.  
 * Implement retrieval only after the mandatory prototype capabilities are working.
 
-The Golden Bucket is explicitly described as theoretical, so you should not assume OpsFleet will provide real historical examples.
+The Golden Bucket is explicitly described as theoretical, so you should not assume the client will provide real historical examples.
 
 # **11\. Continuous learning**
 
@@ -868,7 +868,7 @@ The non-developer UI could be a simple administrative page built later.
 
 # **14\. Extensibility and future capabilities**
 
-OpsFleet specifically mentions charts, emails, and web searches.
+The client specifically mentions charts, emails, and web searches.
 
 I would describe these as additional tools with clearly defined interfaces.
 
@@ -922,7 +922,7 @@ I would keep tests alongside development throughout, rather than deferring all t
 
 # 
 
-# **16\. What I would demonstrate to OpsFleet**
+# **16\. What I would demonstrate to the client**
 
 Your demonstration should tell a coherent story and show the system's important safeguards in action.I suggest the following test scenarios.
 
@@ -953,7 +953,7 @@ For the **error-recovery demonstration**, I would **inject a controlled failure*
 
 That single sequence demonstrates conversation state, SQL execution, report generation, persistence, human oversight, and auditability.
 
-# **17\. Questions I would ask OpsFleet**
+# **17\. Questions I would ask the client**
 
 They explicitly invite questions about assumptions. I would take advantage of that.
 
@@ -1055,7 +1055,7 @@ For the production HLD, you could describe model routing:
 
 You should also account for Gemini's requests-per-minute, tokens-per-minute, and daily limits, particularly on free-tier accounts.
 
-I would make the model configurable so OpsFleet can run the prototype with an available model without modifying the application.
+I would make the model configurable so the client can run the prototype with an available model without modifying the application.
 
 # **20\. Final recommendations**
 
@@ -1230,7 +1230,7 @@ Together, the three diagrams would communicate:
 2. Deployment architecture: Where the components run and where data is stored.  
 3. Sequence diagram: How a request actually executes from beginning to end.
 
-That would directly address OpsFleet's request for both **a production-ready HLD** and a **detailed explanation of component communication**.
+That would directly address the client's request for both **a production-ready HLD** and a **detailed explanation of component communication**.
 
 # **Additional Conversations**
 

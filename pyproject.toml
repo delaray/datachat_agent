@@ -1,5 +1,5 @@
 [project]
-name = "opsfleet"
+name = "datachat-agent"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

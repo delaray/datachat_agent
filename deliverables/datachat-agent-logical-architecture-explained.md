@@ -252,7 +252,7 @@ The source image is a sound **logical** overview, but its arrows intentionally o
 | User/system learning and prompt persona management | Optional implementation | Fully designed |
 | Charts, email, web search and advanced features | Extensibility hooks only | Integration design |
 
-## 10. Design decisions to confirm with OpsFleet
+## 10. Design decisions to confirm with the client
 
 - Definition of gross/net revenue and handling of cancellations and returns.
 - Definition and eligibility window for churn, which is not a direct source-table field.

@@ -88,7 +88,7 @@ class RuntimeTests(unittest.TestCase):
 
     def test_sink_failure_does_not_disable_budget(self):
         sink = Mock(side_effect=OSError('PRIVATE_PATH'))
-        with self.assertLogs('opsfleet.telemetry', level='WARNING') as logs:
+        with self.assertLogs('datachat.telemetry', level='WARNING') as logs:
             with request_scope(limits=RequestLimits(max_model_attempts=0), sink=sink) as runtime:
                 with self.assertRaises(BudgetExceeded):
                     runtime.model_attempt()

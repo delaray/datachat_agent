@@ -3,7 +3,7 @@
 ## Critical
 
 1. **A live Gemini API key is in Git history and on GitHub.**
-   `diagrams/OpsFleet-API-Key-Details.png` is a screenshot of the key. It was committed in
+   An API-key screenshot in `diagrams/` shows the key. It was committed in
    `df0bb8d` and is on `origin/main` and `origin/dev`. **Revoke and rotate the key now.** Then
    delete the image and purge it from history (e.g. `git filter-repo`) before sharing the repo.
    The untracked `poc-assignment.pdf` at the repo root contains the same key, so do not commit it.
@@ -41,7 +41,7 @@
 ## Documentation & housekeeping
 
 11. **Stale or inconsistent docs.**
-    - `ARCHITECTURE.md` says "not yet implemented" and refers to `offsfleet` and `images/`.
+    - `ARCHITECTURE.md` says "not yet implemented" and refers to an old project path and `images/`.
     - The README says the image directory is `images/`.
     - `REQUIREMENTS.md` checkboxes are mostly unticked even where features exist.
     - Test counts drift through the README (63 → 71 → 101 → 125).

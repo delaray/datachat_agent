@@ -1,6 +1,6 @@
 # DataChat Agent Retail Analysis Assistant — Architecture
 
-Status: proposed design, not yet implemented. This document is intended to accompany the existing `offsfleet` uv project at `/home/pierre/projects/offsfleet`.
+Status: proposed design, not yet implemented. This document is intended to accompany the existing `datachat_agent` uv project at `/home/pierre/projects/datachat_agent`.
 
 ## Existing development baseline
 

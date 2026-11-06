@@ -290,7 +290,7 @@ Charts must use approved aggregates; email must verify recipients and report acc
 
 ## 4. Architectural decisions and assumptions register
 
-The items below are explicit design proposals or unresolved questions, not assertions supplied by OpsFleet.
+The items below are explicit design proposals or unresolved questions, not assertions supplied by the client.
 
 | ID | Decision / assumption | Rationale and impact | Status / follow-up |
 |---|---|---|---|
@@ -315,7 +315,7 @@ The items below are explicit design proposals or unresolved questions, not asser
 | D19 | GCP region, data residency, availability, backups and disaster recovery are not yet specified | Material production operational decisions | **Client/platform input needed** |
 | D20 | No exact POC completion status is asserted without repository/tests | Distinguishes design intention from demonstrated behavior | Audit and record test evidence |
 
-### 4.1 Items that should be explicitly clarified with OpsFleet
+### 4.1 Items that should be explicitly clarified with the client
 
 1. Which product-level mapping grants each executive access, and whether authorization must be by product ID, category, brand, department or tenant.
 2. Whether user-level customer ranking is allowed at all given the strict PII rule; if allowed, which anonymous aggregates and minimum cohort sizes are acceptable.

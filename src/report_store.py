@@ -28,7 +28,7 @@ def datachat_conninfo(*, test: bool = False, admin: bool = False) -> str:
         dbname=os.getenv('DATACHAT_TEST_DB_NAME' if test else 'DATACHAT_DB_NAME',
                          'datachatdb_test' if test else 'datachatdb'),
         user=os.getenv(prefix + 'USER', ''), password=os.getenv(prefix + 'PASSWORD', ''),
-        application_name='opsfleet')
+        application_name='datachat')
 
 
 class ReportStore:

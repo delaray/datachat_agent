@@ -110,7 +110,7 @@ class RequestRuntime:
             self.sink(record)
         except Exception:
             # Accounting remains enforced even when trace storage is unavailable.
-            logging.getLogger('opsfleet.telemetry').warning('trace_write_failed')
+            logging.getLogger('datachat.telemetry').warning('trace_write_failed')
 
     def fail(self, category: str):
         with self._lock:
@@ -199,8 +199,8 @@ class RequestRuntime:
                 self.counters['missing_billed_usage_responses'] += 1
 
 
-_current = contextvars.ContextVar('opsfleet_request', default=None)
-_node = contextvars.ContextVar('opsfleet_node', default=None)
+_current = contextvars.ContextVar('datachat_request', default=None)
+_node = contextvars.ContextVar('datachat_node', default=None)
 
 
 @contextmanager
