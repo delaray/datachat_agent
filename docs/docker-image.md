@@ -1,13 +1,13 @@
 # Docker image and Compose deployment
 
 The interactive DataChat Agent chat runs in one application container,
-**`delaray/datachat:1.0.0`**, which talks live to Gemini and BigQuery. Docker Compose
+**`delaray/datachat:1.0.1`**, which talks live to Gemini and BigQuery. Docker Compose
 adds the official `postgres:18` container that holds the `datachatdb` report library
 (see [postgresql.md](postgresql.md)).
 
 ```mermaid
 flowchart LR
-    you([Executive at terminal]) -->|docker compose run| app["datachat container<br/>delaray/datachat:1.0.0"]
+    you([Executive at terminal]) -->|docker compose run| app["datachat container<br/>delaray/datachat:1.0.1"]
     app -->|HTTPS, API key| gemini[Gemini API]
     app -->|HTTPS, ADC| bq[(BigQuery)]
     app -->|"datachat_app → SET ROLE user-x"| pg["postgres container<br/>datachatdb"]
@@ -85,7 +85,7 @@ or workload identity instead, with BigQuery Job User + Data Viewer roles only.
 - A `pg_isready` healthcheck gates the app (`depends_on: condition: service_healthy`).
 
 ### `datachat`
-- `image: delaray/datachat:1.0.0` with `build: .`: `docker compose build` builds and
+- `image: delaray/datachat:1.0.1` with `build: .`: `docker compose build` builds and
   tags it locally, and on another machine `docker compose pull` fetches it from Docker Hub.
 - Connects as `datachat_app` to host `postgres`. Every report transaction switches to the
   executive's role, so row-level security applies exactly as on the host.
@@ -128,10 +128,10 @@ To use a different Gemini model, edit `GEMINI_MODEL_1` in `secrets/app.env`, or 
 ## Build and publish
 
 ```bash
-docker build -t delaray/datachat:1.0.0 .
+docker build -t delaray/datachat:1.0.1 .
 docker login -u delaray
-docker push delaray/datachat:1.0.0
-docker pull delaray/datachat:1.0.0
+docker push delaray/datachat:1.0.1
+docker pull delaray/datachat:1.0.1
 ```
 
 The Docker Hub repository is public unless you make it private in Docker Hub. The
@@ -150,3 +150,11 @@ image contains no credentials, but it does include the executives' grant file
   (digest `sha256:55c7a47a7acfea7af4dcfbe7674015364488aab4e221bda4e906adcb595a876e`).
   After deleting the local copy, `docker pull` restored the same digest, and the pulled
   image ran the chat against the Compose database.
+
+## Verified (2026-11-06): 1.0.1
+
+- Rebuilt from `main` and tagged `delaray/datachat:1.0.1`.
+- Pushed to Docker Hub as `delaray/datachat:1.0.1`
+  (digest `sha256:bfeedca37b3802cafa220eb62629ba840c8213aa0b656c0e06c1ea55b069eb8e`).
+  After deleting the local copy, `docker pull` restored the same digest, and the pulled
+  image started and printed its CLI help.

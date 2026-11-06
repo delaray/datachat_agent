@@ -9,7 +9,7 @@
 ![Gemini](https://img.shields.io/badge/Google_Gemini-LLM-8E75B2?logo=googlegemini&logoColor=white)
 ![BigQuery](https://img.shields.io/badge/BigQuery-read--only-669DF6?logo=googlebigquery&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)
-[![Docker](https://img.shields.io/badge/Docker-delaray%2Fdatachat%3A1.0.0-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/delaray/datachat)
+[![Docker](https://img.shields.io/badge/Docker-delaray%2Fdatachat%3A1.0.1-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/delaray/datachat)
 
 [Install](docs/user-guide/01-installation.md) ·
 [Use](docs/user-guide/02-using-datachat.md) ·
@@ -104,7 +104,7 @@ gcloud auth application-default login
 uv run --no-project --with python-dotenv python -m scripts.make_docker_secrets
 
 # 5. Download the public image, start the report database, then chat
-docker compose pull        # pulls delaray/datachat:1.0.0 from Docker Hub
+docker compose pull        # pulls delaray/datachat:1.0.1 from Docker Hub
 docker compose up -d postgres
 docker compose run --rm datachat --chat --user user-a
 ```

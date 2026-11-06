@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
 
   datachat:
-    image: delaray/datachat:1.0.0
+    image: delaray/datachat:1.0.1
     build: .
     depends_on:
       postgres:

@@ -85,7 +85,7 @@ query costs to the Google Cloud project you name in `PROJECT_ID`.
 
 > [!TIP]
 > **You don't need to build anything.** A ready-to-use public image is published on Docker Hub as
-> [**`delaray/datachat:1.0.0`**](https://hub.docker.com/r/delaray/datachat). It contains the
+> [**`delaray/datachat:1.0.1`**](https://hub.docker.com/r/delaray/datachat). It contains the
 > application and its locked dependencies, but **no credentials**. Your keys are supplied when the
 > container starts (step A.3). It is about 815 MB to download and runs as an unprivileged user.
 
@@ -138,15 +138,15 @@ whenever you change a key or sign in again with gcloud.
 ### A.4 Download the image and start the database
 
 ```bash
-docker compose pull              # downloads delaray/datachat:1.0.0 from Docker Hub, and postgres:18
+docker compose pull              # downloads delaray/datachat:1.0.1 from Docker Hub, and postgres:18
 docker compose up -d postgres    # starts the report database in the background
 docker compose ps                # postgres should show "healthy" after a few seconds
 ```
 
 `docker compose pull` fetches the pre-built public image
-[`delaray/datachat:1.0.0`](https://hub.docker.com/r/delaray/datachat) from Docker Hub, so nothing is
+[`delaray/datachat:1.0.1`](https://hub.docker.com/r/delaray/datachat) from Docker Hub, so nothing is
 compiled on your machine. You can also download it directly with
-`docker pull delaray/datachat:1.0.0`. To build the same image from source instead, run
+`docker pull delaray/datachat:1.0.1`. To build the same image from source instead, run
 `docker compose build`.
 
 ### A.5 Start DataChat

@@ -13,7 +13,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 FROM python:3.13-slim
 LABEL org.opencontainers.image.title="datachat" \
       org.opencontainers.image.description="DataChat Agent data-analysis chat assistant (Gemini + BigQuery + PostgreSQL)" \
-      org.opencontainers.image.version="1.0.0"
+      org.opencontainers.image.version="1.0.1"
 ENV PATH=/opt/venv/bin:$PATH PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
     DATACHAT_GRANTS_FILE=/app/config/grants.executives.json
 RUN useradd --create-home --uid 10001 datachat
