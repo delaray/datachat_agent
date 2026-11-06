@@ -14,7 +14,8 @@ from dotenv import load_dotenv
 
 if __package__:
     from .telemetry import BudgetExceeded, request_scope
-else:  # Preserve `python src/gemini.py` smoke-test usage.
+# Preserve `python src/gemini.py` smoke-test usage.
+else:
     from telemetry import BudgetExceeded, request_scope
 
 logger = logging.getLogger("opsfleet-logger")
@@ -36,9 +37,11 @@ DEFAULT_MODEL = "gemini-3.6-flash"
 
 
 class GeminiAPIError(RuntimeError):
-    """HTTP failure with a status code callers can safely handle without payloads."""
+    """HTTP failure with a status code callers can handle without payloads."""
 
-    def __init__(self, status_code: int, message: str, *, reason: str | None = None):
+    def __init__(self, status_code: int,
+                 message: str, *,
+                 reason: str | None = None):
         self.status_code = status_code
         self.reason = reason or ('rate_limit' if status_code == 429 else 'http_error')
         super().__init__(message)
@@ -52,13 +55,23 @@ def query_gemini(prompt: str, *, model: str,
                  timeout: float = 60,
                  max_retries: int = 3
                  ) -> str:
-    """Query Gemini within the current request budget, or a standalone default one."""
+    """Query Gemini within the current budget, or a standalone default one."""
     with request_scope(kind='gemini') as runtime:
         try:
-            return _query_gemini(prompt, model=model, timeout=timeout, max_retries=max_retries, runtime=runtime)
+            return _query_gemini(prompt, model=model, timeout=timeout,
+                                 max_retries=max_retries, runtime=runtime)
         except BudgetExceeded:
-            runtime.emit('model_finished', status='error', category='budget_exceeded')
+            runtime.emit('model_finished', status='error',
+                         category='budget_exceeded')
             raise
+
+
+# -----------------------------------------------------------------------------
+# Internal Gemini query implementation
+# -----------------------------------------------------------------------------
+
+# TODO: Refactor this function to improve readability and maintainability.
+# TODO: Implement retry logic and error handling for Gemini API requests.
 
 
 def _query_gemini(prompt, *, model, timeout, max_retries, runtime):
@@ -88,8 +101,10 @@ def _query_gemini(prompt, *, model, timeout, max_retries, runtime):
     googleapi_url_prefix = "https://generativelanguage.googleapis.com/"
     request = Request(
         f"{googleapi_url_prefix}v1beta/models/{model}:generateContent",
-        data=json.dumps({"contents": [{"parts": [{"text": prompt}]}],
-                         "generationConfig": {"maxOutputTokens": runtime.limits.max_output_tokens}}).encode(),
+        data=json.dumps(
+            {"contents": [{"parts": [{"text": prompt}]}],
+             "generationConfig":
+                {"maxOutputTokens": runtime.limits.max_output_tokens}}).encode(),
         headers={
             "Content-Type": "application/json",
             "x-goog-api-key": GEMINI_API_KEY,
@@ -188,6 +203,10 @@ def _query_gemini(prompt, *, model, timeout, max_retries, runtime):
     return text
 
 
+# -----------------------------------------------------------------------------
+# Test function for Gemini query
+# ----------------------------------------------------------------------------- 
+
 def test_query_gemini(model=DEFAULT_MODEL,
                       prompt="What is the capital of France?"
                       ) -> None:
@@ -203,3 +222,7 @@ def test_query_gemini(model=DEFAULT_MODEL,
 
 if __name__ == "__main__":
     test_query_gemini()
+
+# -----------------------------------------------------------------------------
+# End of Gemini query module
+# -----------------------------------------------------------------------------

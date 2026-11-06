@@ -1,35 +1,60 @@
-"""Local operator CLI. The OS user/operator is trusted to select the test identity."""
+# *****************************************************************************
+# DataChat Agent CLI Entry Point.
+# *****************************************************************************
+#
+# The local operator (i.e. OS user) is trusted and expected to select
+#  the test identity.
+#
+# *****************************************************************************
 
+# Python standard library imports
 import argparse
 import os
 
 from dotenv import load_dotenv
 
+# Local application imports
 from src.application import COUNT_QUESTION
 from src.bq_client import BigQueryRunner
 from src.conversation import HELP, AnalysisSession, UnsupportedRequest
-from src.grants import JsonGrantStore
 from src.golden import GoldenKnowledgeStore
+from src.grants import JsonGrantStore
 from src.graph import PolicyDenied
-from src.trusted_bq import TrustedBigQueryExecutor
 from src.report_commands import REPORT_HELP, ReportCommands
 from src.report_store import ReportStore, datachat_conninfo
 from src.telemetry import BudgetExceeded, JsonlTraceSink, RequestLimits, request_scope
+from src.trusted_bq import TrustedBigQueryExecutor
 
+# -----------------------------------------------------------------------------
+# Run the chat session loop
+# -----------------------------------------------------------------------------
 
-def run_chat(session: AnalysisSession, *, reports: ReportCommands | None = None, read=input, write=print) -> int:
-    write("OpsFleet analysis session. Type /help for examples or /quit to exit.")
+def run_chat(session: AnalysisSession, *,
+             reports: ReportCommands | None = None,
+             read=input, write=print
+             ) -> int:
+    write("DataChat Agent CLI analysis session. Type /help for examples "
+          "or /quit to exit the application.")
     if reports is not None:
-        write(f"Conversation ID: {reports.conversation_id}. Use --conversation-id with this ID to resume pending report approvals after restart.")
+        write(f"Conversation ID: {reports.conversation_id}. "
+              "Use --conversation-id with this ID to resume pending report "
+              "approvals after restart.")
+
+    # Main interactive chat loop
     while True:
         try:
             text = read("You> ").strip()
         except (EOFError, KeyboardInterrupt):
             write("Session ended.")
             return 0
+
+        # Skip empty input
         if not text:
             continue
+
         command = text.casefold()
+
+        # Handle special commands before sending to the session
         if command in {"/quit", "/exit"}:
             write("Session ended.")
             return 0
@@ -40,11 +65,14 @@ def run_chat(session: AnalysisSession, *, reports: ReportCommands | None = None,
             session.reset()
             write("Conversation context cleared.")
             continue
+
+        # Process the user input within the request scope
         with request_scope(
             limits=session.request_limits if isinstance(session, AnalysisSession) else None,
             sink=session.trace_sink if isinstance(session, AnalysisSession) else None,
             kind='cli_turn',
         ) as runtime:
+
             try:
                 if reports is not None:
                     runtime.remaining()
@@ -58,56 +86,139 @@ def run_chat(session: AnalysisSession, *, reports: ReportCommands | None = None,
                 write(result['answer'])
                 if result.get('error'):
                     write(f"Request ID: {runtime.request_id}")
+
             except UnsupportedRequest as exc:
                 runtime.fail('unsupported_request')
                 write(str(exc))
+                write(f"Request ID: {runtime.request_id}")
+
             except PolicyDenied:
                 runtime.fail('policy_denied')
                 write("Access denied: the identity, report, operation, or product scope is unavailable.")
                 write(f"Request ID: {runtime.request_id}")
+
             except BudgetExceeded as exc:
                 runtime.fail('budget_exceeded')
                 write(str(exc))
                 write(f"Request ID: {runtime.request_id}")
+
             except ValueError as exc:
                 runtime.fail('invalid_request')
                 write(str(exc))
+                write(f"Request ID: {runtime.request_id}")
+
             except Exception as exc:
                 runtime.fail('unexpected_error')
                 runtime.emit('cli_error', error_type=type(exc).__name__)
-                write(f"Unable to complete the request ({type(exc).__name__}). Try again or use /reset.")
+                write(f"Unable to complete the request ({type(exc).__name__})."
+                      " Try again or use /reset.")
                 write(f"Request ID: {runtime.request_id}")
 
+
+def setup_args_parser() -> argparse.ArgumentParser:
+    "Setup and return the argument parser for the OpsFleet CLI."
+    
+    parser = argparse.ArgumentParser(
+        description="OpsFleet: authorized retail aggregate analysis"
+        )
+    
+    parser.add_argument(
+        '--user', required=True,
+        help='Trusted local operator-selected identity; not web auth.'
+        )
+    parser.add_argument(
+        '--grants',
+        default=os.getenv('DATACHAT_GRANTS_FILE', 'config/grants.local.json'),
+        help='Path to the grants file'
+        )
+    parser.add_argument(
+        '--model',
+        default=os.getenv('GEMINI_MODEL_1', 'gemini-3.6-flash'),
+        help='Model to use for analysis'
+        )
+    parser.add_argument(
+        '--golden-demo',
+        action='store_true',
+        help='Include clearly labeled synthetic Golden Trio references'
+        )
+    parser.add_argument(
+        '--reports-dsn',
+        default=None,
+        help='PostgreSQL report library connection string; default from DATACHAT_DB_* in .env'
+        )
+    parser.add_argument(
+        '--conversation-id',
+        help='Resume report operations in an existing owned conversation UUID'
+        )
+    parser.add_argument(
+        '--report',
+        action='store_true', help='Generate and save a report after the one-shot analysis')
+    parser.add_argument(
+        '--trace-file',
+        default='.local/traces.jsonl',
+        help='Privacy-safe JSONL request trace'
+        )
+    parser.add_argument(
+        '--deadline-seconds',
+        type=float,
+        default=120
+        )
+    parser.add_argument(
+        '--max-model-attempts',
+        type=int,
+        default=6
+        )
+    parser.add_argument(
+        '--max-queries',
+        type=int,
+        default=2
+        )
+    parser.add_argument(
+        '--max-dry-runs',
+        type=int,
+        default=2
+        )
+    parser.add_argument(
+        '--max-query-bytes',
+        type=int,
+        default=200_000_000
+        )
+    parser.add_argument(
+        '--max-output-tokens',
+        type=int,
+        default=4096
+        )
+
+    # Mutually exclusive mode selection: chat or question
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
+        '--chat',
+        action='store_true',
+        help='Start an in-memory conversation for this identity'
+        )
+    mode.add_argument(
+        '--question',
+        default=None,
+        help='Ask one supported aggregate question; default is item count'
+        )
+
+    return parser
 
 
 def main() -> int:
     load_dotenv('.env', override=True)
-    parser = argparse.ArgumentParser(description="OpsFleet: authorized retail aggregate analysis")
-    parser.add_argument('--user', required=True, help='Trusted local operator-selected identity; not web authentication')
-    parser.add_argument('--grants', default=os.getenv('DATACHAT_GRANTS_FILE') or 'config/grants.local.json')
-    parser.add_argument('--model', default=os.getenv('GEMINI_MODEL_1') or 'gemini-3.6-flash')
-    parser.add_argument('--golden-demo', action='store_true', help='Include clearly labeled synthetic Golden Trio references')
-    parser.add_argument('--reports-dsn', default=None,
-                        help='PostgreSQL report library connection string; default from DATACHAT_DB_* in .env')
-    parser.add_argument('--conversation-id', help='Resume report operations in an existing owned conversation UUID')
-    parser.add_argument('--report', action='store_true', help='Generate and save a report after the one-shot analysis')
-    parser.add_argument('--trace-file', default='.local/traces.jsonl', help='Privacy-safe JSONL request trace')
-    parser.add_argument('--deadline-seconds', type=float, default=120)
-    parser.add_argument('--max-model-attempts', type=int, default=6)
-    parser.add_argument('--max-queries', type=int, default=2)
-    parser.add_argument('--max-dry-runs', type=int, default=2)
-    parser.add_argument('--max-query-bytes', type=int, default=200_000_000)
-    parser.add_argument('--max-output-tokens', type=int, default=4096)
-    mode = parser.add_mutually_exclusive_group()
-    mode.add_argument('--chat', action='store_true', help='Start an in-memory conversation for this identity')
-    mode.add_argument('--question', default=None, help='Ask one supported aggregate question; default is item count')
+    parser = setup_args_parser()
     args = parser.parse_args()
+
+    # Ensure mutually exclusive mode selection is respected
     if args.report and args.chat:
         parser.error('Use /report inside --chat, or --report for a one-shot analysis')
     if args.conversation_id and not (args.chat or args.report):
         parser.error('--conversation-id requires --chat or --report')
     store = None
     try:
+        # Validate grants and environment variables before proceeding
+        # with the session setup.
         grants = JsonGrantStore(args.grants)
         grants.access_for_user(args.user)  # Fail before any external call.
         if not os.getenv('PROJECT_ID') or not os.getenv('GEMINI_API_KEY'):

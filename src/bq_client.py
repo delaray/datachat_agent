@@ -13,8 +13,8 @@ class BigQueryRunner:
     DataFrame results."""
 
     def __init__(self, project_id: str | None = None,
-                 dataset_id: str | None = \
-                     "bigquery-public-data.thelook_ecommerce") -> None:
+                 dataset_id: str | None =
+                 "bigquery-public-data.thelook_ecommerce") -> None:
         """Initialize BigQuery client.
     
         Args:
